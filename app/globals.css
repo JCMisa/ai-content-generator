@@ -66,4 +66,25 @@
   body {
     @apply bg-background text-foreground;
   }
+  body::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  body::-webkit-scrollbar-track {
+    display: none;
+  }
+
+  body::-webkit-scrollbar-thumb {
+    background: #2e236c;
+  }
+}
+
+.logo-text {
+  background: -webkit-linear-gradient(16deg, #4e31aa, #3795bd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.linear-bg {
+  background: -webkit-linear-gradient(16deg, #4e31aa, #3795bd);
 }
