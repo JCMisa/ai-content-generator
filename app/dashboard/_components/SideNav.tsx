@@ -1,7 +1,7 @@
 "use client";
 
 import { UserButton, useUser } from "@clerk/nextjs";
-import { Activity, HeartHandshake, LayoutGrid } from "lucide-react";
+import { FileClock, LayoutGrid, Settings, WalletCards } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -23,15 +23,21 @@ const SideNav = ({ isShow }: PropTypes) => {
     },
     {
       id: 2,
-      name: "Assessment",
-      icon: <HeartHandshake />,
-      path: "/dashboard/assessment",
+      name: "History",
+      icon: <FileClock />,
+      path: "/dashboard/history",
     },
     {
       id: 3,
-      name: "Manage Status",
-      icon: <Activity />,
-      path: "/dashboard/status",
+      name: "Billing",
+      icon: <WalletCards />,
+      path: "/dashboard/billing",
+    },
+    {
+      id: 4,
+      name: "Setting",
+      icon: <Settings />,
+      path: "/dashboard/setting",
     },
   ];
 

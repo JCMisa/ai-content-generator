@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { Toaster } from "@/components/ui/sonner";
 
-const inter = Inter({ subsets: ["latin"] });
+const outfit = Outfit({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "IdeAI",
@@ -32,7 +32,7 @@ export default function RootLayout({
         <head>
           <link rel="icon" type="image/svg+xml" href="/logo.svg" />
         </head>
-        <body className={inter.className}>
+        <body className={outfit.className}>
           {children}
           <Toaster />
         </body>
