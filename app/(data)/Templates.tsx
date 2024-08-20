@@ -235,17 +235,17 @@ export default [
     ],
   },
   {
-    name: "English Grammer Check",
-    desc: "AI Model to Correct your english grammer by providing the text",
+    name: "English Grammar Check",
+    desc: "AI Model to Correct your english grammar by providing the text",
     icon: "/template-icons/grammar.png",
     category: "english",
 
-    slug: "english-grammer-checker",
+    slug: "english-grammar-checker",
     aiPrompt:
       "Rewrite the inputText by correcting the grammar and give output in rich text editor format",
     form: [
       {
-        label: "Enter text to correct the grammer",
+        label: "Enter text to correct the grammar",
         field: "input",
         name: "inputText",
         required: true,

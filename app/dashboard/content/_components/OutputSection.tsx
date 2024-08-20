@@ -1,12 +1,21 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import "@toast-ui/editor/dist/theme/toastui-editor-dark.css";
 import { Editor } from "@toast-ui/react-editor";
 import { Button } from "@/components/ui/button";
 import { Copy } from "lucide-react";
 
-const OutputSection = () => {
+interface PropTypes {
+  aiOutput: string;
+}
+
+const OutputSection = ({ aiOutput }: PropTypes) => {
   const editorRef: any = useRef();
+
+  useEffect(() => {
+    const editorInstance = editorRef.current.getInstance();
+    editorInstance.setMarkdown(aiOutput);
+  }, [aiOutput]);
 
   return (
     <div className="bg-dark text-light rounded-lg shadow-lg border">
@@ -20,7 +29,7 @@ const OutputSection = () => {
       <Editor
         ref={editorRef}
         initialValue="Preview of your result will appear in the markdown tab."
-        previewStyle="vertical"
+        previewStyle="horizontal"
         height="600px"
         initialEditType="wysiwyg"
         useCommandShortcut={true}
