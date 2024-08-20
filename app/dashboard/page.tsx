@@ -8,7 +8,7 @@ const Dashboard = () => {
   const [userSearchInput, setUserSearchInput] = useState<string | any>();
 
   return (
-    <div className="p-5 mb-7">
+    <div className="p-5 mb-9 md:mb-0 bg-dark-200 h-full rounded-lg">
       {/* Search section */}
       <SearchSection
         onSearchInput={(value: string) => setUserSearchInput(value)}

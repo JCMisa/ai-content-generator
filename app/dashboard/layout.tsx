@@ -17,7 +17,7 @@ const DashboardLayout = ({
   };
 
   return (
-    <div>
+    <div className="">
       <div className="fixed md:w-64 hidden md:block">
         <SideNav isShow={show} />
       </div>
