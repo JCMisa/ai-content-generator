@@ -263,7 +263,8 @@ export default [
       "Depends on user codeDescription write a code and give output in rich text editor format in code block ",
     form: [
       {
-        label: "Enter description of code you want along with Programming Lang",
+        label:
+          "Enter description of code you want along with Programming Language",
         field: "textarea",
         name: "codeDesscripton",
         required: true,
