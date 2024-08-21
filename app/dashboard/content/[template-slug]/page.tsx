@@ -39,26 +39,41 @@ const CreateNewContent = (props: PROPS) => {
 
     const result = await chatSession.sendMessage(finalAiPrompt);
     setAiOutput(result.response.text());
-    await saveInDb(formData, selectedTemplate?.slug, result.response.text());
+    await saveInDb(
+      formData,
+      selectedTemplate?.slug,
+      result.response.text(),
+      selectedTemplate?.name,
+      selectedTemplate?.icon
+    );
     setLoading(false);
   };
 
-  const saveInDb = async (formData: any, slug: any, aiResp: string) => {
+  const saveInDb = async (
+    formData: any,
+    slug: any,
+    aiResp: string,
+    title: string,
+    icon: string
+  ) => {
     setLoading(true);
     try {
       const result = await db.insert(AIOutput).values({
         formData: formData,
-        templateSlug: slug,
         aiResponse: aiResp,
+        templateSlug: slug,
+        title: title,
+        icon: icon,
         createBy: user?.primaryEmailAddress?.emailAddress,
         createdAt: moment().format("MM-DD-yyyy"),
       });
-      toast(
-        <p className="font-bold text-sm text-green-500">
-          Content saved successfully!
-        </p>
-      );
+
       if (result) {
+        toast(
+          <p className="font-bold text-sm text-green-500">
+            Content saved successfully!
+          </p>
+        );
       }
     } catch (error) {
       toast(
