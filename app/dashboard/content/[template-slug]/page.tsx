@@ -9,6 +9,11 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { chatSession } from "@/utils/AiModal";
+import { db } from "@/utils/db";
+import { AIOutput } from "@/utils/schema";
+import { useUser } from "@clerk/nextjs";
+import moment from "moment";
+import { toast } from "sonner";
 
 interface PROPS {
   params: {
@@ -18,6 +23,7 @@ interface PROPS {
 
 const CreateNewContent = (props: PROPS) => {
   const router = useRouter();
+  const { user } = useUser();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [aiOutput, setAiOutput] = useState<string>("");
@@ -33,7 +39,36 @@ const CreateNewContent = (props: PROPS) => {
 
     const result = await chatSession.sendMessage(finalAiPrompt);
     setAiOutput(result.response.text());
+    await saveInDb(formData, selectedTemplate?.slug, result.response.text());
     setLoading(false);
+  };
+
+  const saveInDb = async (formData: any, slug: any, aiResp: string) => {
+    setLoading(true);
+    try {
+      const result = await db.insert(AIOutput).values({
+        formData: formData,
+        templateSlug: slug,
+        aiResponse: aiResp,
+        createBy: user?.primaryEmailAddress?.emailAddress,
+        createdAt: moment().format("MM-DD-yyyy"),
+      });
+      toast(
+        <p className="font-bold text-sm text-green-500">
+          Content saved successfully!
+        </p>
+      );
+      if (result) {
+      }
+    } catch (error) {
+      toast(
+        <p className="font-bold text-sm text-red-500">
+          Internal error occured while saving the content.
+        </p>
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
