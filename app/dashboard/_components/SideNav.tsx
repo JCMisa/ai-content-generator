@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
+import UsageTrack from "./UsageTrack";
 
 interface PropTypes {
   isShow: boolean;
@@ -72,13 +73,20 @@ const SideNav = ({ isShow }: PropTypes) => {
             ))}
           </div>
           <div className="fixed bottom-5 p-2 flex gap-2 items-center text-light">
-            <UserButton />
-            <div className="">
-              <p className="text-sm font-bold">{user?.fullName}</p>
-              <p className="text-xs text-slate-400">
-                {user?.primaryEmailAddress?.emailAddress}
-              </p>
-            </div>
+            {user?.primaryEmailAddress?.emailAddress ==
+            "johncarlomisa399@gmail.com" ? (
+              <div>
+                <UserButton />
+                <div className="">
+                  <p className="text-sm font-bold">{user?.fullName}</p>
+                  <p className="text-xs text-slate-400">
+                    {user?.primaryEmailAddress?.emailAddress}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <UsageTrack />
+            )}
           </div>
         </div>
       )}
