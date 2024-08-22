@@ -92,6 +92,9 @@ const History = () => {
   const handleCopy = (aiResponse: string) => {
     navigator.clipboard.writeText(aiResponse); // put te text on device clipboard
     setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 3000);
   };
 
   return (
