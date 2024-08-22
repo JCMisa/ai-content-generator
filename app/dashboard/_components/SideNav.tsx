@@ -47,7 +47,7 @@ const SideNav = ({ isShow }: PropTypes) => {
   return (
     <div>
       {isShow && (
-        <div className="h-screen p-5 border shadow-md transition-all">
+        <div className="h-screen p-5 border shadow-md transition-all relative">
           <Link href={"/"}>
             <div className="flex items-center gap-2 cursor-pointer">
               <Image src={"/logo.svg"} alt="logo" width={40} height={40} />
@@ -72,22 +72,22 @@ const SideNav = ({ isShow }: PropTypes) => {
               </Link>
             ))}
           </div>
-          <div className="fixed bottom-5 p-2 flex gap-2 items-center text-light">
-            {user?.primaryEmailAddress?.emailAddress ==
-            "johncarlomisa399@gmail.com" ? (
-              <div>
-                <UserButton />
-                <div className="">
-                  <p className="text-sm font-bold">{user?.fullName}</p>
-                  <p className="text-xs text-slate-400">
-                    {user?.primaryEmailAddress?.emailAddress}
-                  </p>
-                </div>
+          {user?.primaryEmailAddress?.emailAddress ==
+          "johncarlomisa399@gmail.com" ? (
+            <div className="fixed bottom-5 p-2 flex gap-2 items-center text-light">
+              <UserButton />
+              <div className="">
+                <p className="text-sm font-bold">{user?.fullName}</p>
+                <p className="text-xs text-slate-400">
+                  {user?.primaryEmailAddress?.emailAddress}
+                </p>
               </div>
-            ) : (
+            </div>
+          ) : (
+            <div className="absolute bottom-5 left-0 w-full">
               <UsageTrack />
-            )}
-          </div>
+            </div>
+          )}
         </div>
       )}
     </div>

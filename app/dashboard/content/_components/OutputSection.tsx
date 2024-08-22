@@ -1,9 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import "@toast-ui/editor/dist/theme/toastui-editor-dark.css";
 import { Editor } from "@toast-ui/react-editor";
 import { Button } from "@/components/ui/button";
-import { Copy } from "lucide-react";
+import { CircleCheck, Copy } from "lucide-react";
 
 interface PropTypes {
   aiOutput: string;
@@ -12,18 +12,41 @@ interface PropTypes {
 const OutputSection = ({ aiOutput }: PropTypes) => {
   const editorRef: any = useRef();
 
+  const [copy, setCopy] = useState(false);
+
   useEffect(() => {
     const editorInstance = editorRef.current.getInstance();
     editorInstance.setMarkdown(aiOutput);
   }, [aiOutput]);
 
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopy(true);
+  };
+
   return (
     <div className="bg-dark text-light rounded-lg shadow-lg border">
       <div className="flex justify-between items-center p-5">
         <h2 className="font-medium text-lg">Your Result</h2>
-        <Button className="flex flex-row items-center gap-2">
-          <Copy className="w-4 h-4" /> Copy
-        </Button>
+
+        {copy ? (
+          <Button
+            variant="outline"
+            className="flex flex-row items-center gap-2"
+            onClick={() => handleCopy(aiOutput)}
+          >
+            <CircleCheck className="w-4 h-4 text-green-500" />{" "}
+            <p className="text-green-500">Copied</p>
+          </Button>
+        ) : (
+          <Button
+            variant="outline"
+            className="flex flex-row items-center gap-2"
+            onClick={() => handleCopy(aiOutput)}
+          >
+            <Copy className="w-4 h-4" /> Copy
+          </Button>
+        )}
       </div>
 
       <Editor
