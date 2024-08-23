@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import SideNav from "./_components/SideNav";
 import DashboardHeader from "./_components/DashboardHeader";
 import ButtomNav from "./_components/ButtomNav";
+import { TotalUsageContext } from "../(context)/TotalUsageContext";
 
 const DashboardLayout = ({
   children,
@@ -16,19 +17,23 @@ const DashboardLayout = ({
     setShow((prev) => !prev);
   };
 
+  const [totalUsage, setTotalUsage] = useState<number>(0);
+
   return (
-    <div className="">
-      <div className="fixed md:w-64 hidden md:block">
-        <SideNav isShow={show} />
+    <TotalUsageContext.Provider value={{ totalUsage, setTotalUsage }}>
+      <div className="">
+        <div className="fixed md:w-64 hidden md:block">
+          <SideNav isShow={show} />
+        </div>
+        <div className={`${show ? "md:ml-64" : ""} transition-all`}>
+          <DashboardHeader showSideNav={showSideNav} />
+          {children}
+        </div>
+        <div className="fixed block md:hidden w-full bottom-0">
+          <ButtomNav />
+        </div>
       </div>
-      <div className={`${show ? "md:ml-64" : ""} transition-all`}>
-        <DashboardHeader showSideNav={showSideNav} />
-        {children}
-      </div>
-      <div className="fixed block md:hidden w-full bottom-0">
-        <ButtomNav />
-      </div>
-    </div>
+    </TotalUsageContext.Provider>
   );
 };
 

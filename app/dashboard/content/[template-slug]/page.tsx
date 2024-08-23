@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import FormSection from "../_components/FormSection";
 import OutputSection from "../_components/OutputSection";
 import { TEMPLATE } from "../../_components/TemplateListSection";
@@ -14,6 +14,7 @@ import { AIOutput } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import moment from "moment";
 import { toast } from "sonner";
+import { TotalUsageContext } from "@/app/(context)/TotalUsageContext";
 
 interface PROPS {
   params: {
@@ -28,11 +29,25 @@ const CreateNewContent = (props: PROPS) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [aiOutput, setAiOutput] = useState<string>("");
 
+  const { totalUsage, setTotalUsage } = useContext(TotalUsageContext);
+
   const selectedTemplate: TEMPLATE | any = Templates?.find(
     (item) => item.slug === props.params["template-slug"]
   );
 
   const generateAiContent = async (formData: any) => {
+    if (
+      totalUsage > 10000 &&
+      user?.primaryEmailAddress?.emailAddress !== "johncarlomisa399@gmail.com"
+    ) {
+      toast(
+        <p className="font-bold text-sm text-red-500">
+          Credit points reached the limit, please upgrade.
+        </p>
+      );
+      router.push("/dashboard/billing");
+      return;
+    }
     setLoading(true);
     const selectedPrompt = selectedTemplate?.aiPrompt;
     const finalAiPrompt = JSON.stringify(formData) + ", " + selectedPrompt;

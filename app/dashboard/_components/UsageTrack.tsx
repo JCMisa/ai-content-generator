@@ -1,16 +1,17 @@
 "use client";
 
+import { TotalUsageContext } from "@/app/(context)/TotalUsageContext";
 import { Button } from "@/components/ui/button";
 import { db } from "@/utils/db";
 import { AIOutput } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 const UsageTrack = () => {
   const { user } = useUser();
 
-  const [totalUsage, setTotalUsage] = useState<number>(0);
+  const { totalUsage, setTotalUsage } = useContext(TotalUsageContext);
 
   const getTotalUsage = async () => {
     let total = 0;
@@ -57,7 +58,7 @@ const UsageTrack = () => {
         <div className="h-2 bg-dark-100 w-full rounded-full mt-3">
           <div
             className="h-2 bg-primary rounded-full"
-            style={{ width: (totalUsage / 10000) * 100 + "%" }}
+            style={{ maxWidth: (totalUsage / 10000) * 100 + "%" }}
           ></div>
         </div>
         <h2 className="text-xs my-2">{totalUsage}/10,000 credits used</h2>
