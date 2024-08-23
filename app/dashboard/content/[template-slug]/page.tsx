@@ -29,7 +29,7 @@ const CreateNewContent = (props: PROPS) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [aiOutput, setAiOutput] = useState<string>("");
 
-  const { totalUsage, setTotalUsage } = useContext(TotalUsageContext);
+  const { totalUsage, setTotalUsage, upgraded } = useContext(TotalUsageContext);
 
   const selectedTemplate: TEMPLATE | any = Templates?.find(
     (item) => item.slug === props.params["template-slug"]
@@ -38,7 +38,9 @@ const CreateNewContent = (props: PROPS) => {
   const generateAiContent = async (formData: any) => {
     if (
       totalUsage > 10000 &&
-      user?.primaryEmailAddress?.emailAddress !== "johncarlomisa399@gmail.com"
+      user?.primaryEmailAddress?.emailAddress !==
+        "johncarlomisa399@gmail.com" &&
+      !upgraded
     ) {
       toast(
         <p className="font-bold text-sm text-red-500">
