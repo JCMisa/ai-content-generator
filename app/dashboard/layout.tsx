@@ -18,12 +18,9 @@ const DashboardLayout = ({
   };
 
   const [totalUsage, setTotalUsage] = useState<number>(0);
-  const [upgraded, setUpgraded] = useState<boolean>(false);
 
   return (
-    <TotalUsageContext.Provider
-      value={{ totalUsage, setTotalUsage, upgraded, setUpgraded }}
-    >
+    <TotalUsageContext.Provider value={{ totalUsage, setTotalUsage }}>
       <div className="">
         <div className="fixed md:w-64 hidden md:block">
           <SideNav isShow={show} />

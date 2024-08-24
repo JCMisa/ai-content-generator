@@ -7,16 +7,24 @@ import {
   PaymentElement,
 } from "@stripe/react-stripe-js";
 import convertToSubcurrency from "@/lib/convertToSubcurrency";
-import { TotalUsageContext } from "@/app/(context)/TotalUsageContext";
+import { PaymentIntent } from "@stripe/stripe-js";
+import { useUser } from "@clerk/nextjs";
+import { db } from "@/utils/db";
+import { UserSubscription } from "@/utils/schema";
+import moment from "moment";
+import { toast } from "sonner";
 
 const CheckoutPage = ({ amount }: { amount: number }) => {
+  const { user } = useUser();
+
   const stripe = useStripe();
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const { upgraded, setUpgraded } = useContext(TotalUsageContext);
+  const [paymentIntentId, setPaymentIntentId] = useState<
+    PaymentIntent | null | any
+  >(null);
 
   useEffect(() => {
     fetch("/api/create-payment-intent", {
@@ -27,12 +35,41 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
       body: JSON.stringify({ amount: convertToSubcurrency(amount) }),
     })
       .then((res) => res.json())
-      .then((data) => setClientSecret(data.clientSecret));
+      .then((data) => {
+        setClientSecret(data.clientSecret);
+        setPaymentIntentId(data.paymentIntentId);
+      });
   }, [amount]);
+
+  const saveSubscripiton = async (paymentIntentId: string) => {
+    try {
+      const result = await db.insert(UserSubscription).values({
+        email: user?.primaryEmailAddress?.emailAddress,
+        username: user?.fullName,
+        active: true,
+        paymentId: paymentIntentId,
+        joinDate: moment().format("MM-DD-yyyy"),
+      });
+      if (result) {
+        console.log("payment result: " + JSON.stringify(result));
+      } else {
+        console.log("error saving payment info");
+      }
+    } catch (error) {
+      toast(
+        <p className="text-sm text-red-500 font-bold">
+          Internal error occured while saving the payment info
+        </p>
+      );
+    }
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
+
+    console.log("saving payment info to database...");
+    await saveSubscripiton(paymentIntentId);
 
     if (!stripe || !elements) {
       return;
@@ -50,7 +87,7 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
       elements,
       clientSecret,
       confirmParams: {
-        return_url: `http://www.localhost:3000/payment-success?amount=${amount}`,
+        return_url: `http://localhost:3000/payment-success?amount=${amount}`,
       },
     });
 
@@ -61,9 +98,7 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
     } else {
       // The payment UI automatically closes with a success animation.
       // Your customer is redirected to your `return_url`.
-      setUpgraded(true);
     }
-
     setLoading(false);
   };
 
