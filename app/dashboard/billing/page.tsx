@@ -6,6 +6,17 @@ import convertToSubcurrency from "@/lib/convertToSubcurrency";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useRouter } from "next/navigation";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
@@ -59,7 +70,7 @@ const BillingPage = () => {
                       <path d="M20 6L9 17l-5-5"></path>
                     </svg>
                   </span>
-                  Vexillologist pitchfork
+                  10,000 words limit
                 </p>
                 <p className="flex items-center text-gray-400 mb-2">
                   <span className="w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-800 text-gray-500 rounded-full flex-shrink-0">
@@ -75,7 +86,7 @@ const BillingPage = () => {
                       <path d="M20 6L9 17l-5-5"></path>
                     </svg>
                   </span>
-                  Tumeric plaid portland
+                  50+ content templates
                 </p>
                 <p className="flex items-center text-gray-400 mb-6">
                   <span className="w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-800 text-gray-500 rounded-full flex-shrink-0">
@@ -91,13 +102,13 @@ const BillingPage = () => {
                       <path d="M20 6L9 17l-5-5"></path>
                     </svg>
                   </span>
-                  Mixtape chillwave tumeric
+                  Unlimited download & copy
                 </p>
                 <button
                   className="flex items-center mt-auto text-white bg-gray-800 border-0 py-2 px-4 w-full focus:outline-none hover:bg-gray-700 rounded"
                   onClick={() => router.push("/dashboard")}
                 >
-                  Get Started
+                  Currently Active Plan
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -143,7 +154,7 @@ const BillingPage = () => {
                       <path d="M20 6L9 17l-5-5"></path>
                     </svg>
                   </span>
-                  Vexillologist pitchfork
+                  1,000,000 words limit
                 </p>
                 <p className="flex items-center text-gray-400 mb-2">
                   <span className="w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-800 text-gray-500 rounded-full flex-shrink-0">
@@ -159,7 +170,7 @@ const BillingPage = () => {
                       <path d="M20 6L9 17l-5-5"></path>
                     </svg>
                   </span>
-                  Tumeric plaid portland
+                  50+ templates access
                 </p>
                 <p className="flex items-center text-gray-400 mb-2">
                   <span className="w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-800 text-gray-500 rounded-full flex-shrink-0">
@@ -175,7 +186,7 @@ const BillingPage = () => {
                       <path d="M20 6L9 17l-5-5"></path>
                     </svg>
                   </span>
-                  Hexagon neutra unicorn
+                  Unlimited download and copy
                 </p>
                 <p className="flex items-center text-gray-400 mb-6">
                   <span className="w-4 h-4 mr-2 inline-flex items-center justify-center bg-gray-800 text-gray-500 rounded-full flex-shrink-0">
@@ -191,41 +202,70 @@ const BillingPage = () => {
                       <path d="M20 6L9 17l-5-5"></path>
                     </svg>
                   </span>
-                  Mixtape chillwave tumeric
+                  1 year of history
                 </p>
-                <button
-                  className="flex items-center mt-auto text-white bg-indigo-500 border-0 py-2 px-4 w-full focus:outline-none hover:bg-indigo-600 rounded"
-                  onClick={() => router.push("#payment-form")}
-                >
-                  Get Started
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    className="w-4 h-4 ml-auto"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M5 12h14M12 5l7 7-7 7"></path>
-                  </svg>
-                </button>
+                <Dialog>
+                  <DialogTrigger asChild className="hidden sm:flex">
+                    <button
+                      className="flex items-center mt-auto text-white bg-indigo-500 border-0 py-2 px-4 w-full focus:outline-none hover:bg-indigo-600 rounded"
+                      onClick={() => router.push("#payment-form")}
+                    >
+                      Get Started
+                      <svg
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        className="w-4 h-4 ml-auto"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M5 12h14M12 5l7 7-7 7"></path>
+                      </svg>
+                    </button>
+                  </DialogTrigger>
+                  <DialogTrigger asChild className="block sm:hidden">
+                    <div className="flex float-end justify-center sm:hidden w-14 h-14 items-center rounded-full bg-primary cursor-pointer">
+                      <h2 className="text-3xl">+</h2>
+                    </div>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>
+                        <h2 className="mb-3 text-lg font-bold">Upgrade Plan</h2>
+                      </DialogTitle>
+                      <DialogDescription>
+                        <Elements
+                          stripe={stripePromise}
+                          options={{
+                            mode: "payment",
+                            amount: convertToSubcurrency(amount),
+                            currency: "usd",
+                          }}
+                        >
+                          <CheckoutPage amount={amount} />
+                        </Elements>
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter className="sm:justify-start">
+                      <DialogClose asChild>
+                        <Button
+                          variant={"outline"}
+                          className="mt-5 w-full flex items-end self-end"
+                        >
+                          Close
+                        </Button>
+                      </DialogClose>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+
                 <p className="text-xs text-gray-400 mt-3">
                   Literally you probably haven't heard of them jean shorts.
                 </p>
               </div>
             </div>
           </div>
-          <Elements
-            stripe={stripePromise}
-            options={{
-              mode: "payment",
-              amount: convertToSubcurrency(amount),
-              currency: "usd",
-            }}
-          >
-            <CheckoutPage amount={amount} />
-          </Elements>
         </div>
       </section>
     </div>
