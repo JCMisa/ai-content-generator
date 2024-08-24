@@ -36,7 +36,7 @@ const SideNav = ({ isShow }: PropTypes) => {
     },
     {
       id: 4,
-      name: "Setting",
+      name: "Settings",
       icon: <Settings />,
       path: "/dashboard/setting",
     },
