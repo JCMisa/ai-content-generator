@@ -100,3 +100,9 @@
 .card-scroll::-webkit-scrollbar-thumb {
   background: -webkit-linear-gradient(16deg, #4e31aa, #3795bd);
 }
+
+.home-page-img {
+  position: absolute;
+  transform: translateX(-50%, -50%);
+  z-index: 1;
+}

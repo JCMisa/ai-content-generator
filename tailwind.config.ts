@@ -28,6 +28,7 @@ const config = {
           DEFAULT: "#060517",
           100: "#17153B",
           200: "#030314",
+          300: "#0e0e17",
           foreground: "hsl(var(--primary-foreground))",
         },
         light: {
