@@ -1,9 +1,10 @@
 "use client";
 
 import { TotalUsageContext } from "@/app/(context)/TotalUsageContext";
+import { UserSubscriptionContext } from "@/app/(context)/UserSubscriptionContext";
 import { Button } from "@/components/ui/button";
 import { db } from "@/utils/db";
-import { AIOutput } from "@/utils/schema";
+import { AIOutput, UserSubscription } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
 import React, { useContext, useEffect, useState } from "react";
@@ -12,6 +13,28 @@ const UsageTrack = () => {
   const { user } = useUser();
 
   const { totalUsage, setTotalUsage } = useContext(TotalUsageContext);
+  const { userSubscription, setUserSubscription } = useContext(
+    UserSubscriptionContext
+  );
+  const [maxWords, setMaxWords] = useState<number | any>(10000);
+
+  const isUserSubscribed = async () => {
+    const result = await db
+      .select()
+      .from(UserSubscription)
+      .where(
+        eq(
+          UserSubscription?.email,
+          user?.primaryEmailAddress?.emailAddress as string
+        )
+      );
+
+    if (result.length != 0) {
+      // if yung current user is in the UserSubscription schema, then he is subscribed and paid already
+      setUserSubscription(true);
+      setMaxWords(1000000);
+    }
+  };
 
   const getTotalUsage = async () => {
     let total = 0;
@@ -38,6 +61,7 @@ const UsageTrack = () => {
 
   useEffect(() => {
     user && getTotalUsage();
+    user && isUserSubscribed();
   }, [user]);
 
   return (
@@ -58,10 +82,12 @@ const UsageTrack = () => {
         <div className="h-2 bg-dark-100 w-full rounded-full mt-3">
           <div
             className="h-2 bg-primary rounded-full"
-            style={{ maxWidth: (totalUsage / 10000) * 100 + "%" }}
+            style={{ maxWidth: (totalUsage / maxWords) * 100 + "%" }}
           ></div>
         </div>
-        <h2 className="text-xs my-2">{totalUsage}/10,000 credits used</h2>
+        <h2 className="text-xs my-2">
+          {totalUsage}/{maxWords} credits used
+        </h2>
       </div>
       <Button className="w-full my-3">Upgrade</Button>
     </div>

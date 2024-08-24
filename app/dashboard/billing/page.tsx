@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useContext } from "react";
 import CheckoutPage from "@/components/custom/CheckoutPage";
 import convertToSubcurrency from "@/lib/convertToSubcurrency";
 import { Elements } from "@stripe/react-stripe-js";
@@ -17,6 +17,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { UserSubscriptionContext } from "@/app/(context)/UserSubscriptionContext";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
@@ -25,6 +26,9 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
 const BillingPage = () => {
   const router = useRouter();
+  const { userSubscription, setUserSubscription } = useContext(
+    UserSubscriptionContext
+  );
 
   const amount = 38;
   return (
@@ -108,7 +112,7 @@ const BillingPage = () => {
                   className="flex items-center mt-auto text-white bg-gray-800 border-0 py-2 px-4 w-full focus:outline-none hover:bg-gray-700 rounded"
                   onClick={() => router.push("/dashboard")}
                 >
-                  Currently Active Plan
+                  Continue
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -207,10 +211,11 @@ const BillingPage = () => {
                 <Dialog>
                   <DialogTrigger asChild className="hidden sm:flex">
                     <button
+                      disabled={userSubscription}
                       className="flex items-center mt-auto text-white bg-indigo-500 border-0 py-2 px-4 w-full focus:outline-none hover:bg-indigo-600 rounded"
                       onClick={() => router.push("#payment-form")}
                     >
-                      Get Started
+                      {userSubscription ? "Active Plan" : "Get Started"}
                       <svg
                         fill="none"
                         stroke="currentColor"

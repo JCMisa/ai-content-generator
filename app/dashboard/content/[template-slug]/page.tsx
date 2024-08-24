@@ -15,6 +15,7 @@ import { useUser } from "@clerk/nextjs";
 import moment from "moment";
 import { toast } from "sonner";
 import { TotalUsageContext } from "@/app/(context)/TotalUsageContext";
+import { UserSubscriptionContext } from "@/app/(context)/UserSubscriptionContext";
 
 interface PROPS {
   params: {
@@ -30,6 +31,9 @@ const CreateNewContent = (props: PROPS) => {
   const [aiOutput, setAiOutput] = useState<string>("");
 
   const { totalUsage, setTotalUsage } = useContext(TotalUsageContext);
+  const { userSubscription, setUserSubscription } = useContext(
+    UserSubscriptionContext
+  );
 
   const selectedTemplate: TEMPLATE | any = Templates?.find(
     (item) => item.slug === props.params["template-slug"]
@@ -38,6 +42,7 @@ const CreateNewContent = (props: PROPS) => {
   const generateAiContent = async (formData: any) => {
     if (
       totalUsage > 10000 &&
+      !userSubscription &&
       user?.primaryEmailAddress?.emailAddress !== "johncarlomisa399@gmail.com"
     ) {
       toast(
