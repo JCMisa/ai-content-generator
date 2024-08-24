@@ -209,7 +209,7 @@ const BillingPage = () => {
                   1 year of history
                 </p>
                 <Dialog>
-                  <DialogTrigger asChild className="hidden sm:flex">
+                  <DialogTrigger asChild className="flex">
                     <button
                       disabled={userSubscription}
                       className="flex items-center mt-auto text-white bg-indigo-500 border-0 py-2 px-4 w-full focus:outline-none hover:bg-indigo-600 rounded"
@@ -228,11 +228,6 @@ const BillingPage = () => {
                         <path d="M5 12h14M12 5l7 7-7 7"></path>
                       </svg>
                     </button>
-                  </DialogTrigger>
-                  <DialogTrigger asChild className="block sm:hidden">
-                    <div className="flex float-end justify-center sm:hidden w-14 h-14 items-center rounded-full bg-primary cursor-pointer">
-                      <h2 className="text-3xl">+</h2>
-                    </div>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>

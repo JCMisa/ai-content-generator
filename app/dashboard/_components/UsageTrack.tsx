@@ -7,10 +7,12 @@ import { db } from "@/utils/db";
 import { AIOutput, UserSubscription } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
+import { useRouter } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 
 const UsageTrack = () => {
   const { user } = useUser();
+  const router = useRouter();
 
   const { totalUsage, setTotalUsage } = useContext(TotalUsageContext);
   const { userSubscription, setUserSubscription } = useContext(
@@ -89,7 +91,12 @@ const UsageTrack = () => {
           {totalUsage}/{maxWords} credits used
         </h2>
       </div>
-      <Button className="w-full my-3">Upgrade</Button>
+      <Button
+        onClick={() => router.push("/dashboard/billing")}
+        className="w-full my-3"
+      >
+        Upgrade
+      </Button>
     </div>
   );
 };
